@@ -9,10 +9,10 @@ import java.time.Duration;
 import java.time.Instant;
 
 public class TCPClientSingle {
-    static int SERVER_PORT = 4477;
+    static int SERVER_PORT = 5544;
     static int FILES_TO_RECIEVE = 10;
     static String FILE_TO_RECIEVE = "fishRecieve";
-    static String SERVER_ADDRESS = "localhost";
+    static String SERVER_ADDRESS = "169.254.235.209";
 
     public static void clientRun() throws IOException {
         File file = new File(FILE_TO_RECIEVE);
