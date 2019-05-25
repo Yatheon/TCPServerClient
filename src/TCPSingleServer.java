@@ -10,8 +10,8 @@ import java.io.*;
 public class TCPSingleServer {
 
 
-    static int SERVER_PORT = 4477;
-    static String FILE_TO_SEND = "fishy10";
+    static int SERVER_PORT = 5544;
+    static String FILE_TO_SEND = "fish1";
 
 
     public static void serverRun() throws IOException {
