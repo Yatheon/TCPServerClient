@@ -10,22 +10,25 @@ import java.time.Instant;
 
 public class TCPClientSingle {
     static int SERVER_PORT = 5544;
-    static int FILES_TO_RECIEVE = 10;
     static String FILE_TO_RECIEVE = "fishRecieve";
-    static String SERVER_ADDRESS = "169.254.235.209";
+    static String SERVER_ADDRESS = "169.254.10.219";
 
-    public static void clientRun() throws IOException {
+    public static void clientRun(int FILES_TO_RECIEVE) throws IOException {
+		BufferedWriter resultOut = new BufferedWriter(new FileWriter("TCPSingleTimes.txt"));
         File file = new File(FILE_TO_RECIEVE);
+		double FILESIZE_TO_RECIEVE = 0;
+		Duration onlyRecieve = Duration.ZERO;
+		Duration getTime = Duration.ZERO;
         Instant firstConnect;
         Instant done;
         Duration timeForAllFiles;
         InetSocketAddress serverAddr = new InetSocketAddress(SERVER_ADDRESS,
                 SERVER_PORT);
 
-        firstConnect = Instant.now();
+    	
 
         for (int i = 0; i < FILES_TO_RECIEVE; i++) {
-            Instant starts = Instant.now();
+          	Instant inst = Instant.now();
             Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
             byte[] contents = new byte[10000];
 
@@ -40,22 +43,27 @@ public class TCPClientSingle {
                 bufferedOutputStream.write(contents, 0, bytesRead);
 
             bufferedOutputStream.flush();
+			Instant last = Instant.now();
+			getTime = Duration.between(inst,last);
             socket.close();
-
-            Instant ends = Instant.now();
-            Duration duration = Duration.between(starts, ends);
-            System.out.println("\n\nFILE " + i);
-            System.out.println("ReceiveTime: " + duration.toMillis());
-            System.out.println("File lenght: " + file.length());
-
-            float fish = (float) file.length() / duration.toMillis();
-            file.delete();
-
-
+			onlyRecieve = onlyRecieve.plus(Duration.between(inst,last));		
+            long test = getTime.toMillis();
+            resultOut.write(test + "\n");
+			System.out.println("Receive time: "+getTime.toMillis());
+			if(i == 0){
+			FILESIZE_TO_RECIEVE = file.length();
+			}
+			 file.delete();
         }
-
-        done = Instant.now();
-        timeForAllFiles = Duration.between(firstConnect, done);
-        System.out.println("Time to get all files: " + timeForAllFiles.toMillis() + "ms");
+		resultOut.close();
+ 
+        double totalFileSizeMB = (FILESIZE_TO_RECIEVE * FILES_TO_RECIEVE) / 1000000.0;
+        double totalDurationSec = onlyRecieve.toNanos() / 1000000000.0;
+        double megaBytePerSec = totalFileSizeMB / totalDurationSec;
+		
+        System.out.println("Total file size: " + totalFileSizeMB + " MB");
+        System.out.println(onlyRecieve.toMillis() + "ms");
+		System.out.println(megaBytePerSec + " MB/sec");
+		
     }
 }

@@ -1,2 +1,11 @@
 
 *.class
+
+src/FilesToSend/fish1
+src/FilesToSend/fish10
+src/FilesToSend/fish100
+src/FilesToSend/fishy1
+src/FilesToSend/fishy10
+src/FilesToSend/fishy100
+src/TCPSingleTimes.txt
+
