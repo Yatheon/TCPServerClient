@@ -11,7 +11,7 @@ public class TCPSingleServer {
 
 
     static int SERVER_PORT = 5544;
-    static String FILE_TO_SEND = "fish1";
+    static String FILE_TO_SEND = "fishy10";
 
 
     public static void serverRun() throws IOException {
