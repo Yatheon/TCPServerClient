@@ -4,6 +4,12 @@ import java.net.Socket;
 
 public class StartClientSingle {
     public static void main(String[] args) throws Exception {
-        TCPClientSingle.clientRun();
+       
+		   try {
+			    TCPClientSingle.clientRun(Integer.parseInt(args[0]));
+               }catch (Exception e){
+                   e.printStackTrace();
+               }
     }
 }
+  
