@@ -11,30 +11,43 @@ public class TCPSingleServer {
 
 
     static int SERVER_PORT = 5544;
-    static String FILE_TO_SEND = "fishy10";
 
 
-    public static void serverRun() throws IOException {
+String dataFromClient;
 
-        ServerSocket serverSocket = new ServerSocket(SERVER_PORT);
+    public static void serverRun(String FILE_TO_SEND, int STREAMS) throws IOException {
+		FileInputStream fis = null;
+		BufferedInputStream bis = null;
+		OutputStream os = null;
+		ServerSocket serverSocket = new ServerSocket(SERVER_PORT);
+		Socket socket = null;
         File file = new File("FilesToSend/" + FILE_TO_SEND);
-
-
+		byte[] bytes = new byte[(int)file.length()];
+		byte[] endByte = "0".getBytes();
        // long fileSize = file.length();
         while (true) {
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
-            System.out.println("Waiting");
-            Socket socket = serverSocket.accept();
-            OutputStream outputStream = socket.getOutputStream();
-            InputStream inputStream = socket.getInputStream();
-            byte[] bytes = new byte[16 * 1024];
 
-            int count;
-            while ((count = bufferedInputStream.read(bytes)) > 0) {
-                outputStream.write(bytes, 0, count);
-            }
-            System.out.println("Closing");
-            socket.close();
+			
+            System.out.println("Waiting");
+			try{
+            socket = serverSocket.accept();
+			os = socket.getOutputStream();
+			fis = new FileInputStream(file);
+			bis = new BufferedInputStream(fis);
+			for(int i = 0; i<STREAMS; i++ ){
+				bis.read(bytes, 0, bytes.length);
+				os.write(bytes, 0, bytes.length);
+				os.flush();
+			}
+			System.out.println("Done");
+			}finally{
+			if(bis != null) bis.close();
+			if(os != null)os.close();
+			if(socket!=null)socket.close();
+			
+			}
+            System.out.println("closed!");
+  
         }
     }
 }
